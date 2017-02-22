@@ -1,4 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
+#define mp(a, b) make_pair(a, b)
 
 #include <iostream>
 #include <algorithm>
@@ -19,77 +20,49 @@ int main()
 	int n;
 	cin >> n;
 
-	vi f(n * 3 + 5, -1);
+	vpii f(3 * n + 100, mp(-1, n+10));
+	f[1] = mp(-1, 0);
 	int idx = 1;
-	int answ_size = 0;
-	if (n == 1)
-		answ_size--;
-	for (;;)
+
+	for (int i = 1; i <= n; i++)
 	{
-		if (idx == n)
-			break;
-		if (f[idx + 1] == -1)
-			f[idx + 1] = idx;
-		if (idx + 1 == n)
-			break;
-
-		if (f[idx * 2] == -1)
-			f[idx * 2] = idx;
-		if (idx * 2 == n)
-			break;
-
-		if (f[idx * 3] == -1)
-			f[idx * 3] = idx;
-		if (idx * 3 == n)
-			break;
+		if (idx > n)
+		{
+			idx++;
+			continue;
+		}
+		if (f[idx + 1].second > f[idx].second + 1)
+		{
+			f[idx + 1].second = f[idx].second + 1;
+			f[idx + 1].first = idx;
+		}
+		if (f[idx * 2].second > f[idx].second + 1)
+		{
+			f[idx * 2].second = f[idx].second + 1;
+			f[idx * 2].first = idx;
+		}
+		if (f[idx * 3].second > f[idx].second + 1)
+		{
+			f[idx * 3].second = f[idx].second + 1;
+			f[idx * 3].first = idx;
+		}
 		idx++;
 	}
-	//int j = 0;
-	//int idx = 0;
-	//f.push_back(make_pair(n, -1));
-	//for (;;)
-	//{
-	//	if (f[idx].first == 1)
-	//		break;
-	//	if (f[idx].first < 1)
-	//	{
-	//		idx++;
-	//		continue;
-	//	}
-	//	f.push_back(make_pair(f[idx].first - 1, idx));
-	//	if (f[idx].first % 2 == 0)
-	//	{
-	//		f.push_back(make_pair(f[idx].first % 2, idx));
-	//	}
-	//	if (f[idx].first % 3 == 0)
-	//	{
-	//		f.push_back(make_pair(f[idx].first % 3, idx));
-	//	}
-	//	
-	//	
-	//	idx++;
-	//}
+
+	cout << f[n].second << endl;
 	vi answer;
 	idx = n;
-	while (f[idx] != -1)
+	while (f[idx].first != -1)
 	{
 		answer.push_back(idx);
-		idx = f[idx];
+		idx = f[idx].first;
 	}
 	answer.push_back(idx);
-	//vector<int> answer;
-	//idx = f.size() - 1;
-	//while (f[idx].second != -1)
-	//{
-	//	answer.push_back(f[idx].first);
-	//	idx = f[idx].second;
-	//}
-	//answer.push_back(f[idx].first);
 	reverse(answer.begin(), answer.end());
-	cout << answ_size + answer.size() << endl;
 	for (int i = 0; i < answer.size(); i++)
-	{
 		cout << answer[i] << " ";
-	}
+
+		/*for (int i = 0; i < 3 * n + 100; i++)
+			cout << i << " : " << f[i].first << " " << f[i].second << endl;*/
 	return 0;
 }
